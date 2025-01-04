@@ -1,0 +1,30 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+    
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H <your-ec2-public-ip> >> ~/.ssh/known_hosts
+        13.60.230.150
+    - name: Deploy to EC2
+      run: |
+        ssh ubuntu@${{ secrets.IP }} << 'EOF'
+          cd /path/to/project
+          git pull origin main
+          docker-compose down
+          docker-compose up -d
+        EOF
