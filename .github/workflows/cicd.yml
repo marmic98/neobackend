@@ -23,5 +23,8 @@ jobs:
       run: |
         ssh ubuntu@${{ secrets.IP }} << 'EOF'
           cd /home/ubuntu/neobackend
-          git pull origin main
+          git pull origin main  # Fa un 'pull' dell'ultima versione del codice
+            npm install  # Rinstalla le dipendenze (se necessario)
+            pm2 restart all  # Riavvia tutte le istanze gestite da PM2
+            pm2 save  # Salva la configurazione per il riavvio del server
         EOF
