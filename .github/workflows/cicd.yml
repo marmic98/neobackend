@@ -18,12 +18,10 @@ jobs:
         mkdir -p ~/.ssh
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H <your-ec2-public-ip> >> ~/.ssh/known_hosts
+        ssh-keyscan -H ${{ secrets.IP }} >> ~/.ssh/known_hosts
     - name: Deploy to EC2
       run: |
         ssh ubuntu@${{ secrets.IP }} << 'EOF'
-          cd /path/to/project
+          cd /home/ubuntu/neobackend
           git pull origin main
-          docker-compose down
-          docker-compose up -d
         EOF
