@@ -19,7 +19,6 @@ jobs:
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H <your-ec2-public-ip> >> ~/.ssh/known_hosts
-        13.60.230.150
     - name: Deploy to EC2
       run: |
         ssh ubuntu@${{ secrets.IP }} << 'EOF'
