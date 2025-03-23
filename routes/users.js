@@ -1,16 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
+const Mail = require('../models/mail');
 const path = require('path');
 const { now } = require('sequelize/lib/utils');
 const nodemailer = require('nodemailer');
 const { stringify } = require('querystring');
+const { DATE } = require('sequelize');
+require("dotenv").config();
 
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'michelmartino98.mm@gmail.com',
-        pass: 'fqtv uqnj yitb rrpy'
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PSW,
     }
 })
 
@@ -74,6 +77,11 @@ router.post('/sendEmail', async(req, res) => {
     const emailListPromise =  await User.findAll({ })
     const emailList  = emailListPromise.filter(elem => elem.unsubscribeDate == null).map(elem => elem.email);
     let response = await sendEmail(emailList.join(','), oggetto, emailText);
+    await Mail.create({
+        oggetto,
+        corpo: emailText,
+        dataInvio: new Date(),
+      });
     console.log(response)
     return response ? res.status(200).json('Email inviata con successo a tutti i destinatari') : res.status(500).json('Errore nell\'invio dell\'email');
 })
@@ -82,7 +90,7 @@ router.post('/sendEmail', async(req, res) => {
 async function sendEmail(to, subject, text) {
     console.log(to)
     const mailOptions = {
-        from: 'michelmartino98.mm@gmail.com',   // L'email del mittente
+        from: 'nuovaeditoriaorganizzata@gmail.com',   // L'email del mittente
         to: to,                        // L'email del destinatario
         subject: subject,              // Oggetto dell'email
         text: text                      // Corpo dell'email
