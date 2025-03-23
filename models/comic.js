@@ -10,6 +10,9 @@ const Comic = sequelize.define('Comic', {
     primaryKey: true,
     autoIncrement: true,
   },
+  visuals: {
+    type: DataTypes.INTEGER,
+  },
   title: {
     type: DataTypes.STRING,
     allowNull: false,

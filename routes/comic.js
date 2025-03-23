@@ -189,16 +189,20 @@ router.get('/image/:imageName', (req, res) => {
     });
 });
 
-router.get('/image/fumetti/:fumettoId/:capId', (req, res) => {
+router.get('/image/fumetti/:fumettoId/:capId', async (req, res) => {
     const fumettoId = req.params.fumettoId;
     const capId = req.params.capId
     const imagePath = path.join(__dirname, '../imgs/fumetti', fumettoId+"/"+capId); // Percorso dell'immagine
-    res.sendFile(imagePath, (err) => {
+    const fumetto = await Comic.findOne({where: {id: fumettoId}});
+    fumetto.visuals++;
+    Comic.update(fumetto);
+    return res.sendFile(imagePath, (err) => {
         if (err) {
             console.error(err);
             res.status(err.status).end();
         }
     });
+    
 });
 
 // Endpoint per ottenere un fumetto
