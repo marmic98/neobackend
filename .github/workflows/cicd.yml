@@ -15,7 +15,7 @@ jobs:
     
     - name: Deploy to EC2
       run: |
-        ssh ubuntu@${{ secrets.IP }} << 'EOF'
+        ssh -T ubuntu@${{ secrets.IP }} << 'EOF'
           cd /home/ubuntu/neobackend
           git pull origin main  # Fa un 'pull' dell'ultima versione del codice
             npm install  # Rinstalla le dipendenze (se necessario)
