@@ -12,6 +12,7 @@ const Comic = sequelize.define('Comic', {
   },
   visuals: {
     type: DataTypes.INTEGER,
+    allowNull: true
   },
   title: {
     type: DataTypes.STRING,

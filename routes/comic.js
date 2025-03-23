@@ -194,8 +194,7 @@ router.get('/image/fumetti/:fumettoId/:capId', async (req, res) => {
     const capId = req.params.capId
     const imagePath = path.join(__dirname, '../imgs/fumetti', fumettoId+"/"+capId); // Percorso dell'immagine
     const fumetto = await Comic.findOne({where: {id: fumettoId}});
-    fumetto.visuals++;
-    Comic.update(fumetto);
+    fumetto ? fumetto.update({visuals: fumetto.visuals + 1}) : console.log("fumetto non trovato in fase di aggiornamento visualizzazione")
     return res.sendFile(imagePath, (err) => {
         if (err) {
             console.error(err);
