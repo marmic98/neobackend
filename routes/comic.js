@@ -72,13 +72,13 @@ router.post('/addChapter', upload.array('files', 2), async (req, res) => {
                 return moveFile(sourcePath, destinationPath);
             }));
             fumetto.lastUpdate = new Date();
-            Comic. save(fumetto)
-            res.status(200).json({ message: 'Capitoli incrementati', fileNames: [capitoloFileName, anteprimaFileName] });
+            Comic.save(fumetto)
+            return res.status(200).json({ message: 'Capitoli incrementati', fileNames: [capitoloFileName, anteprimaFileName] });
         } else {
-            res.status(404).json({ message: 'impossibile aggiungere capitolo' });
+            return res.status(404).json({ message: 'impossibile aggiungere capitolo' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 });
 
@@ -149,10 +149,10 @@ router.post('/save/add', upload.array('imgs',4 ), async (req, res) => {
             }) // Sposta il file
         }));
         console.log("fumetto aggiunto!")
-        res.status(200).json({ message: 'tutto ok', /*fileNames: [capitoloFileName, anteprimaFileName]*/ });
+        return res.status(200).json({ message: 'tutto ok', /*fileNames: [capitoloFileName, anteprimaFileName]*/ });
     } catch (error) {
         console.error(error)
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 });
 
@@ -169,10 +169,10 @@ router.get('/', async (req, res) => {
                 {model: Author, as: 'Colorista'},
             ]
         });
-        res.status(200).json(fumetti);
-        console.log("fumetti trovati!")
+        console.log("fumetti trovati!");
+        return res.status(200).json(fumetti);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 });
 
@@ -217,12 +217,12 @@ router.get('/:id', async (req, res) => {
         });
 
         if (fumetto) {
-            res.status(200).json(fumetto);
+            return res.status(200).json(fumetto);
         } else {
-            res.status(404).json({ message: 'Fumetto non trovato' });
+            return res.status(404).json({ message: 'Fumetto non trovato' });
         }
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        return res.status(500).json({ message: error.message });
     }
 });
 

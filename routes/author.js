@@ -10,9 +10,9 @@ const fs = require('fs')
 router.get('/', async (req, res) => {
     try{
         const generi = await Author.findAll({order: [['name', 'ASC']]})
-        res.status(200).json(generi)
+        return res.status(200).json(generi)
     }catch(e){
-        res.status(500)
+        return res.status(500)
     }
 });
 
