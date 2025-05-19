@@ -8,7 +8,7 @@ const userRoutes = require('./routes/login');
 const emailRoutes = require('./routes/users');
 const sequelize = require('./config/database');
 const path = require('path');
-const session = require('express-session');
+require('dotenv').config();
 const app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));

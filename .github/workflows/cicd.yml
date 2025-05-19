@@ -1,24 +1,43 @@
-name: CI/CD Pipeline
+name: Build e Deploy Manuale
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch da buildare e deployare'
+        required: true
+        default: 'main'
+      ambiente:
+        description: 'Ambiente (es: test, prod)'
+        required: true
+        default: 'test'
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
-    
-    - name: Deploy to EC2
-      run: |
-        ssh -T ubuntu@${{ secrets.IP }} << 'EOF'
-          cd /home/ubuntu/neobackend
-          git pull origin main  # Fa un 'pull' dell'ultima versione del codice
-            npm install  # Rinstalla le dipendenze (se necessario)
-            pm2 restart all  # Riavvia tutte le istanze gestite da PM2
-            pm2 save  # Salva la configurazione per il riavvio del server
-        EOF
+      - name: Checkout del branch selezionato
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Installa dipendenze
+        run: npm install
+
+      - name: Build del progetto
+        run: npm run build
+
+      - name: Deploy al server remoto
+        uses: appleboy/scp-action@v0.1.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          source: "dist/"  # o la tua cartella di build
+          target: "/var/www/${{ github.event.inputs.ambiente }}"
