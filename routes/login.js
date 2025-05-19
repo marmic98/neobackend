@@ -14,7 +14,6 @@ router.post('/', async (req, res) => {
         }
         return res.status(200).json({auth: true})
     }
-    return res.status(404).json("non trovato")
     
 });
 
